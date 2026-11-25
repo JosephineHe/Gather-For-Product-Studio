@@ -849,7 +849,48 @@ body:has(.irion-cover, .irion-guide, .irion-detail) { background: #ff792c; }
 .top-pick svg { width: 14px; height: 14px; }
 .dish-bubble:hover, .dish-bubble[aria-expanded=true] { box-shadow: inset 0 0 0 3px currentColor; }
 .dish-bubble:focus-visible { outline: 3px solid #231e20; outline-offset: 3px; }
-#dish-description p { margin: 12px 0; background: #fff3d7; padding: 12px 16px; border-left: 4px solid #572734; }
+/* Sticker positions stay fixed relative to each dish as the cloud resizes. */
+.dish-cloud { margin-top: clamp(34px, 10vw, 48px); }
+.bubble-sticker {
+  position: absolute; width: 54%; height: 45%; object-fit: contain;
+  top: -22%; left: 23%; pointer-events: none;
+  transform: rotate(-8deg); filter: drop-shadow(1px 3px 1px #49200f40);
+}
+.dish-bubble:nth-child(even) .bubble-sticker { transform: rotate(7deg); }
+.dish-bubble { touch-action: manipulation; }
+.dish-bubble[aria-expanded=true] { z-index: 2; }
+.dish-ticket {
+  display: flex; align-items: center; gap: 12px; margin: 16px 0;
+  background: #fff3d7; padding: 12px 16px; border-left: 4px solid #572734;
+  border-radius: 2px 16px 16px 2px; transform-origin: 8% 0;
+}
+.dish-ticket img { width: 22%; height: auto; flex: none; }
+.dish-ticket h3 { font-size: 20px; }
+.dish-ticket p { margin-top: 5px; font-size: 14px; }
+@media (prefers-reduced-motion: no-preference) {
+  .dish-bubble { transition: transform 200ms cubic-bezier(.2,.8,.25,1.3), box-shadow 180ms; }
+  .dish-bubble:focus-visible .bubble-sticker { animation: sticker-hop 420ms ease-out; }
+  .dish-bubble[aria-expanded=true] .bubble-sticker { animation: dish-pop 430ms ease-out; }
+  .dish-bubble:active { transform: scale(.94); }
+  .dish-ticket { animation: ticket-reveal 340ms cubic-bezier(.16,.9,.25,1.12) both; }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .dish-bubble:hover { transform: translateY(-3px); }
+  .dish-bubble:hover:not([aria-expanded=true]) .bubble-sticker { animation: sticker-hop 440ms ease-out; }
+  .dish-bubble:active { transform: scale(.94); }
+}
+@keyframes sticker-hop {
+  38% { transform: translateY(-6px) rotate(9deg); }
+  72% { transform: translateY(-2px) rotate(-6deg); }
+}
+@keyframes dish-pop {
+  25% { transform: scale(.88) rotate(-10deg); }
+  62% { transform: translateY(-5px) scale(1.09) rotate(5deg); }
+}
+@keyframes ticket-reveal {
+  from { opacity: 0; transform: translateY(-9px) rotate(-2deg) scale(.97); }
+  to { opacity: 1; transform: none; }
+}
 @media (max-width: 350px) { .dish-bubble { padding: 4%; } }
 .menu-link { margin-top: 12px; width: fit-content; }
 .irion-cover .primary { border-radius: 99px; }

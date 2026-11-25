@@ -86,6 +86,14 @@ const highlights = [
   ['Fried pork dumplings', 10, 'A crisp starter filled with pork.'],
 ] as const;
 
+const dishIllustrations = [
+  '/images/irion/raw-crab.webp',
+  '/images/irion/raw-shrimp.webp',
+  '/images/irion/gamjatang.webp',
+  '/images/irion/beef-soup.webp',
+  '/images/irion/pork-dumplings.webp',
+] as const;
+
 const signatureDishes: Record<string, string[]> = {
   'rice-thief': ['Soy-marinated raw blue crab', 'Gamjatang', 'Galbitang'],
   haejang: ['Beef bone hangover soup', 'Gamjatang', 'Soy-marinated raw crab'],
@@ -313,13 +321,17 @@ export function IrionProfile() {
             <button className="dish-bubble" key={name} type="button"
               aria-expanded={selectedDish === index} aria-controls="dish-description"
               onClick={() => setSelectedDish(selectedDish === index ? null : index)}>
+              <img className="bubble-sticker" src={dishIllustrations[index]} alt="" draggable={false} />
               {index === 0 && <span className="top-pick"><Sparkles aria-hidden="true" />Top pick</span>}
               <strong>{name}</strong><span className="bubble-price">{money(price)}</span>
             </button>
           ))}
         </div>
         <div id="dish-description" aria-live="polite">
-          {selectedDish !== null && <p><strong>{highlights[selectedDish][0]}</strong> · {highlights[selectedDish][2]}</p>}
+          {selectedDish !== null && <article key={selectedDish} className="dish-ticket">
+            <img src={dishIllustrations[selectedDish]} alt="" />
+            <div><h3>{highlights[selectedDish][0]}</h3><p>{highlights[selectedDish][2]}</p></div>
+          </article>}
         </div>
         <a className="menu-link" href={irionMenu}>Full ordering menu <ArrowUpRight /></a>
       </section>
