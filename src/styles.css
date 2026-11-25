@@ -831,7 +831,15 @@ summary {
 .menu-sheet { margin-top: 26px; border-top: 2px solid var(--ink); padding: 14px 4px; }
 .menu-sheet h2,.irion-guide h1 { letter-spacing: -.045em; }
 .menu-sheet h2 { font-size: 28px; margin-bottom: 12px; }
-body:has(.irion-cover, .irion-guide, .irion-detail) { background: #ff792c; }
+body:has(.irion-cover, .irion-guide, .irion-detail) { background: #eeeae4; }
+@media (min-width: 520px) {
+  .frame:is(.irion-cover, .irion-guide, .irion-detail) {
+    margin-block: 20px;
+    min-height: calc(100dvh - 40px);
+    outline: 1px solid #554d46;
+    box-shadow: 0 6px 24px #30271c20;
+  }
+}
 .dish-cloud { position: relative; aspect-ratio: 1; container-type: inline-size; }
 .dish-bubble {
   position: absolute; display: flex; flex-direction: column; align-items: center;
