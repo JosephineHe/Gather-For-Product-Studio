@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { Footer, Masthead } from './components';
 
-import { ArrowUpRight, Banknote, CalendarDays, ChevronDown, Clock3, Layers2, MapPin, Shrimp, Utensils } from 'lucide-react';
+import { ArrowUpRight, Banknote, CalendarDays, Sparkles, Clock3, Layers2, MapPin, Shrimp, Utensils } from 'lucide-react';
 
 const factorIcons = { Dishes: Utensils, Price: Banknote, Location: MapPin };
 const factors = ['Dishes', 'Price', 'Location'] as const;
@@ -287,6 +288,7 @@ function IrionMatchVisual({ candidate, selected }: { candidate: Candidate; selec
 }
 
 export function IrionProfile() {
+  const [selectedDish, setSelectedDish] = useState<number | null>(null);
   return <div className="frame irion-cover">
     <Masthead step="Restaurant" />
     <main id="content" tabIndex={-1}>
@@ -306,11 +308,19 @@ export function IrionProfile() {
       </section>
       <section className="menu-sheet">
         <h2>Dinner highlights</h2>
-        <div className="menu-list">{highlights.map(([name, price, description], index) =>
-          <details key={name}>
-            <summary>{index === 0 && <Shrimp className="menu-shrimp" aria-label="Featured for comparison" />}<strong>{name}</strong><span className="menu-price">{money(price)}</span><ChevronDown /></summary>
-            <p>{description}{index === 0 && ' Featured in the Twins comparison.'}</p>
-          </details>)}</div>
+        <div className="dish-cloud" role="group" aria-label="Dinner dishes">
+          {highlights.map(([name, price], index) => (
+            <button className="dish-bubble" key={name} type="button"
+              aria-expanded={selectedDish === index} aria-controls="dish-description"
+              onClick={() => setSelectedDish(selectedDish === index ? null : index)}>
+              {index === 0 && <span className="top-pick"><Sparkles aria-hidden="true" />Top pick</span>}
+              <strong>{name}</strong><span className="bubble-price">{money(price)}</span>
+            </button>
+          ))}
+        </div>
+        <div id="dish-description" aria-live="polite">
+          {selectedDish !== null && <p><strong>{highlights[selectedDish][0]}</strong> · {highlights[selectedDish][2]}</p>}
+        </div>
         <a className="menu-link" href={irionMenu}>Full ordering menu <ArrowUpRight /></a>
       </section>
     </main>
@@ -323,13 +333,13 @@ export function IrionTwinProfile() {
   const [params] = useSearchParams();
   const match = candidates.find((candidate) => slug(candidate.name) === id);
   const back = '/irion/twins' + (params.size ? '?' + params.toString() : '');
-  if (!match) return <div className="frame"><Masthead step="Dinner twins" back={back} backLabel="All twins" /><main id="content"><p>Restaurant profile unavailable.</p></main></div>;
+  if (!match) return <div className="frame irion-detail"><Masthead step="Dinner twins" back={back} backLabel="All twins" /><main id="content"><p>Restaurant profile unavailable.</p></main></div>;
   const active = factors.filter((factor) => params.getAll('match').includes(factor));
   const selected: readonly Factor[] = active.length ? active : ['Dishes'];
   const dishes = !selected.length || selected.includes('Dishes');
   const price = selected.includes('Price');
   const location = selected.includes('Location');
-  return <div className="frame">
+  return <div className="frame irion-detail">
     <Masthead step="Twin profile" back={back} backLabel="All twins" />
     <main id="content" tabIndex={-1}>
       <section className="hero twin-hero" data-tone="sage">
