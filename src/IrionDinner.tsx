@@ -1,6 +1,9 @@
 import { Link, useParams, useSearchParams } from 'react-router';
-import { Footer, Masthead, PlateIcon, Stat } from './components';
+import { Footer, Masthead } from './components';
 
+import { ArrowUpRight, Banknote, CalendarDays, ChevronDown, Clock3, Layers2, MapPin, Shrimp, Utensils } from 'lucide-react';
+
+const factorIcons = { Dishes: Utensils, Price: Banknote, Location: MapPin };
 const factors = ['Dishes', 'Price', 'Location'] as const;
 type Factor = typeof factors[number];
 
@@ -166,13 +169,15 @@ export function IrionDinner() {
   ).slice(0, 3);
 
   return (
-    <div className="frame">
+    <div className="frame irion-guide">
       <Masthead step="Dinner twins" back="/" backLabel="IRION" />
       <main id="content" tabIndex={-1}>
-        <div className="intro"><span className="eyebrow">Alternatives to IRION</span><h1>Explore Restaurant Twins</h1><p>Compare dinner by dishes, price and walking distance.</p></div>
+        <div className="intro"><span className="eyebrow">Alternatives to IRION</span><h1>Restaurant Twins</h1></div>
         <fieldset className="irion-filters">
           <legend>Match on</legend>
-          {factors.map((factor) => (
+          {factors.map((factor) => {
+            const Icon = factorIcons[factor];
+            return (
             <button key={factor} type="button" aria-pressed={selected.includes(factor)}
               onClick={() => {
                 const next = selected.includes(factor)
@@ -180,33 +185,33 @@ export function IrionDinner() {
                   : [...selected, factor];
                 if (next.length) setParams({ match: next }, { replace: true });
               }}>
-              {factor}
+              <Icon aria-hidden="true" />{factor}
             </button>
-          ))}
+          ); })}
         </fieldset>
-        {price && <aside className="irion-note">
+        {price && <details className="irion-note"><summary>How we estimate price</summary>
           <strong>IRION dinner estimate · {money(baseline)} per person</strong>
           <p>One median-priced appetizer and two median-priced mains, divided by two, before drinks, tax, and tip.
             Using the published prices we could confirm, IRION’s estimate is ({money(median(basePrices.appetizers))} + 2 × {money(median(basePrices.mains))}) ÷ 2.
             Matches must be within {money(baseline - 10)}–{money(baseline + 10)} and have a similar atmosphere.</p>
           <a href={irionMenu}>IRION ordering menu</a>
-        </aside>}
-        <p role="status">{matches.length} of 3 twins for {selected.join(' + ')}</p>
-        {matches.length < 3 && <p>Fewer than three restaurants meet these filters with the available dinner information. Turn off a filter to see more options.</p>}
+        </details>}
+        <p role="status">{matches.length} {matches.length === 1 ? 'match' : 'matches'}</p>
+        {matches.length < 3 && <p>Try fewer filters to see more options.</p>}
         <div className="cards">
           {matches.map((match, index) => {
             const target = { pathname: '/irion/twins/' + slug(match.name), search: params.toString() };
             const total = matchPercent(match, selected);
             return <article className="card" data-tone={['rose', 'sage', 'honey'][index]} key={match.name}>
               <Link className="card-top" to={target}>
-                <span className="card-icon"><PlateIcon /></span>
-                <div><span className="label">Twin {index + 1}</span><h2>{match.name}</h2></div>
-                <div className="match"><strong>{total}%</strong><span>dinner match</span></div>
+
+                <div><span className="label">{match.area}</span><h2>{match.name}</h2></div>
+                <div className="match score-ring" style={{ backgroundImage: `conic-gradient(#455e34 ${total}%, #e1dfd3 0)` }}><div><strong>{total}%</strong><span>match</span></div></div>
               </Link>
               <ProfilePhoto id={slug(match.name)} kind={photos[slug(match.name)]?.room ? 'room' : 'food'} />
               <div className="card-info">
                 <span><small>Estimated per person</small><strong>{match.prices ? money(dinnerPrice(match.prices)) : 'Unavailable'}</strong></span>
-                <span><small>Location</small><strong>{match.area}</strong></span>
+
               </div>
               <details className="card-breakdown"><summary>Why this {total}% match?</summary><IrionMatchVisual candidate={match} selected={selected} /></details>
               <Link className="card-more" to={target}>View match details →</Link>
@@ -286,29 +291,30 @@ export function IrionProfile() {
     <Masthead step="Restaurant" />
     <main id="content" tabIndex={-1}>
       <section className="cover-story" aria-labelledby="restaurant-name">
-        <div className="cover-heading">
-          <h1 id="restaurant-name">IRION</h1>
-          <span className="area-sticker">Long Island City</span>
+        <div className="cover-heading"><h1 id="restaurant-name">IRION</h1><span className="cuisine">Contemporary<br />Korean</span></div>
+        <div className="cover-photo">
+          <ProfilePhoto id="irion" kind="food" />
+          <span className="area-sticker"><MapPin />Long Island City</span>
+          <span className="seafood-seal" aria-hidden="true"><Shrimp /></span>
         </div>
-        <ProfilePhoto id="irion" kind="food" />
-        <p className="cover-address">21-59 44th Drive · Long Island City</p>
-        <p className="cover-description">Contemporary Korean sit-down dining with marinated seafood, comforting soups and plates to share.</p>
+        <p className="cover-address"><MapPin />21-59 44th Drive</p>
+        <div className="dinner-facts">
+          <span><Banknote /><strong>{money(baseline)}</strong><small>Est. per person</small></span>
+          <span><Clock3 /><strong>5–10 pm</strong><small>Dinner hours</small></span>
+          <a href="https://resy.com/cities/new-york-ny/venues/irion"><CalendarDays /><strong>Resy ↗</strong><small>Reservations</small></a>
+        </div>
       </section>
-      <div className="stats">
-        <Stat label="Estimated per person" value={money(baseline)} detail="Published ordering prices · dinner 5–10 p.m." />
-        <Stat label="Reservations" value={<a href="https://resy.com/cities/new-york-ny/venues/irion">Check Resy</a>} detail="See the venue for availability" />
-      </div>
-      <section className="section">
+      <section className="menu-sheet">
         <h2>Dinner highlights</h2>
-        <div className="items">{highlights.map(([name, price, description], index) =>
-          <article className="item" key={name}><div className="dish-top"><h3>{name}</h3><span className="dish-score">{money(price)}</span></div>
-            {index === 0 && <span className="label">Featured for this comparison</span>}
-            <p>{description}</p>
-          </article>)}</div>
-        <p className="footnote"><a href={irionMenu}>View IRION’s ordering menu</a></p>
+        <div className="menu-list">{highlights.map(([name, price, description], index) =>
+          <details key={name}>
+            <summary>{index === 0 && <Shrimp className="menu-shrimp" aria-label="Featured for comparison" />}<strong>{name}</strong><span className="menu-price">{money(price)}</span><ChevronDown /></summary>
+            <p>{description}{index === 0 && ' Featured in the Twins comparison.'}</p>
+          </details>)}</div>
+        <a className="menu-link" href={irionMenu}>Full ordering menu <ArrowUpRight /></a>
       </section>
     </main>
-    <Footer><Link className="primary" to="/irion/twins">Explore Restaurant Twins →</Link></Footer>
+    <Footer><Link className="primary" to="/irion/twins"><Layers2 /> Explore Restaurant Twins</Link></Footer>
   </div>;
 }
 

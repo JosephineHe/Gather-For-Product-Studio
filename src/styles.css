@@ -794,63 +794,68 @@ summary {
 .irion-profile-link { display: block; margin-top: 1rem; padding: .75rem 1rem; border-radius: .75rem; background: #982d1d; color: #fff !important; text-decoration: none !important; font-weight: 700; }
 .irion-photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
 
-/* IRION restaurant cover */
-.irion-cover {
-  --paper: #f5d5e7;
+/* The IRION dining guide */
+.irion-cover, .irion-guide {
+  --paper: #f5d1e4;
+  --ink: #231e20;
+  --tomato: #282124;
+  --red: #36292f;
   --card: #fffaf2;
-  --ink: #241c20;
-  --red: #39242f;
-  --tomato: #251c21;
-  --muted: #584b51;
-  --line: #dfcbd4;
+  --line: #dfd2c9;
+  --muted: #62565a;
 }
-
-.irion-cover .mast {
-  display: flex;
-  justify-content: space-between;
-  height: 58px;
-  border-bottom: 1px solid var(--ink);
-}
-
+.irion-cover .mast, .irion-guide .mast { border: 0; height: 58px; }
+.irion-cover .mast { display: flex; justify-content: space-between; }
 .irion-cover .mast > span:first-child { display: none; }
-.irion-cover .brand { font-size: 34px; }
-.irion-cover main { padding: 16px; }
-.cover-story, .irion-cover .section {
-  background: var(--card);
-  padding: 18px;
-  border-radius: 24px;
-}
-
-.cover-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.cover-heading h1 {
-  font: 900 clamp(46px, 14vw, 72px)/1 system-ui, sans-serif;
-  letter-spacing: -.085em;
-}
-
-.area-sticker, .irion-cover .dish-score {
-  font: bold 12px/1.25 ui-monospace, monospace;
-  color: var(--ink);
-  background: #bce6f4;
-  padding: 6px 9px;
-  border-radius: 3px;
-  transform: rotate(-5deg);
-}
-
-.irion-cover .photo { margin-top: 12px; }
-.irion-cover .photo img { aspect-ratio: 1.8; object-fit: cover; border-radius: 16px; }
-.cover-address { font: bold 12px/1.4 ui-monospace, monospace; margin: 14px 0 5px; }
-.cover-description { font-size: 14px; }
-.irion-cover .stat { border: 0; border-radius: 16px; }
-.irion-cover .section { margin-top: 12px; }
-.irion-cover .items { border: 0; background: transparent; }
-.irion-cover .item { padding: 14px 2px; }
-.irion-cover .dish-score { background: #d4ed9e; white-space: nowrap; }
-.irion-cover .dish-top { align-items: baseline; gap: 10px; }
-.irion-cover .primary { border-radius: 100px; }
-.irion-cover .next { padding-top: 9px; padding-bottom: max(9px, env(safe-area-inset-bottom)); }
+.irion-cover .brand, .irion-guide .brand { font-size: 34px; }
+.irion-cover main, .irion-guide main { padding: 0 16px 24px; }
+.cover-story, .menu-sheet { padding: clamp(14px,4vw,22px); border-radius: 25px; background: var(--card); }
+.cover-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.cover-heading h1 { font: 950 clamp(54px,16vw,78px)/1 system-ui,sans-serif; letter-spacing: -.085em; }
+.cuisine { font: italic 18px/1.05 Georgia,serif; text-align: right; }
+.cover-photo { position: relative; margin-top: 16px; }
+.cover-photo figure { margin: 0; }
+.cover-photo img { border-radius: 18px; aspect-ratio: 1.65; object-fit: cover; }
+.cover-photo figcaption { text-align: right; margin-top: 8px; }
+.area-sticker { position: absolute; left: 9px; top: 10px; display: flex; align-items: center; gap: 5px; padding: 6px 10px; background: #aadaf1; border: 2px solid white; border-radius: 4px; transform: rotate(-6deg); font: bold 12px/1.2 ui-monospace,monospace; }
+.area-sticker svg,.cover-address svg,.menu-link svg { width: 15px; height: 15px; }
+.seafood-seal { position: absolute; left: 9px; bottom: 3px; width: 58px; height: 58px; display: grid; place-items: center; border-radius: 50%; border: 4px solid #fffaf2; outline: 1px solid #342818; background: #ffc755; transform: rotate(-16deg); }
+.seafood-seal svg { width: 38px; height: 38px; stroke: #452420; stroke-width: 1.6; }
+.cover-address,.menu-link { display: flex; align-items: center; gap: 6px; font-size: 14px; }
+.cover-address { margin: 15px 0; }
+.dinner-facts { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); background: #efe9da; border-radius: 16px; padding: 12px 0; }
+.dinner-facts > * { display: grid; justify-items: center; gap: 3px; color: inherit; text-align: center; }
+.dinner-facts > * + * { border-left: 1px solid #cfc5b3; }
+.dinner-facts svg { width: 21px; height: 21px; }
+.dinner-facts small { font-size: 12px; }
+.menu-sheet { margin-top: 14px; }
+.menu-sheet h2,.irion-guide h1 { letter-spacing: -.045em; }
+.menu-sheet h2 { font-size: 28px; margin-bottom: 12px; }
+.menu-list details { border-top: 1px dashed #cfc5b3; }
+.menu-list summary { display: flex; gap: 8px; align-items: center; cursor: pointer; padding: 13px 0; list-style: none; }
+.menu-list summary::-webkit-details-marker { display: none; }
+.menu-list summary > svg { width: 16px; height: 16px; }
+.menu-list summary .menu-shrimp { color: #a44321; width: 24px; height: 24px; }
+.menu-price { margin-left: auto; background: #d4ecad; padding: 3px 7px; transform: rotate(-4deg); font: bold 13px/1.3 ui-monospace,monospace; }
+.menu-list details[open] summary > svg:last-child { transform: rotate(180deg); }
+.menu-list p { padding: 0 0 14px; color: var(--muted); }
+.menu-link { margin-top: 12px; width: fit-content; }
+.irion-cover .primary { border-radius: 99px; }
+.irion-cover .next { padding-block: 10px max(10px,env(safe-area-inset-bottom)); }
+.irion-guide .intro { padding: 20px 0 8px; }
+.irion-guide .irion-filters { margin-block: 14px; }
+.irion-guide .irion-filters button { display: inline-flex; gap: 5px; align-items: center; min-height: 44px; color: var(--ink); background: #fffaf2; border-color: transparent; padding: 7px 10px; margin-right: 5px; }
+.irion-guide .irion-filters button[aria-pressed=true] { background: #262022; color: white; }
+.irion-filters svg { width: 17px; height: 17px; }
+.irion-guide .cards { gap: 16px; }
+.irion-guide .card { padding: 14px; border-radius: 22px; }
+.irion-guide .card .card-top,.irion-guide .card-info { padding: 0; background: transparent; }
+.irion-guide .card .photo { margin: 10px 0; }
+.irion-guide .card .photo img { aspect-ratio: 2.4; object-fit: cover; }
+.irion-guide .card-top h2 { font-size: 27px; }
+.score-ring { width: 62px; height: 62px; border-radius: 50%; padding: 5px; flex-shrink: 0; }
+.score-ring > div { display: grid; align-content: center; justify-items: center; height: 100%; border-radius: inherit; background: var(--card); }
+.score-ring strong { font-size: 18px; }
+.irion-guide summary,.irion-cover summary { cursor: pointer; }
+.irion-note[open] summary { margin-bottom: 10px; }
+.irion-guide [role=status] { font: bold 14px/1.5 ui-monospace,monospace; margin-top: 12px; }
