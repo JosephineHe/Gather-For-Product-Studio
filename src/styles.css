@@ -793,3 +793,64 @@ summary {
 .irion-results { grid-template-columns: 1fr; }
 .irion-profile-link { display: block; margin-top: 1rem; padding: .75rem 1rem; border-radius: .75rem; background: #982d1d; color: #fff !important; text-decoration: none !important; font-weight: 700; }
 .irion-photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+
+/* IRION restaurant cover */
+.irion-cover {
+  --paper: #f5d5e7;
+  --card: #fffaf2;
+  --ink: #241c20;
+  --red: #39242f;
+  --tomato: #251c21;
+  --muted: #584b51;
+  --line: #dfcbd4;
+}
+
+.irion-cover .mast {
+  display: flex;
+  justify-content: space-between;
+  height: 58px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.irion-cover .mast > span:first-child { display: none; }
+.irion-cover .brand { font-size: 34px; }
+.irion-cover main { padding: 16px; }
+.cover-story, .irion-cover .section {
+  background: var(--card);
+  padding: 18px;
+  border-radius: 24px;
+}
+
+.cover-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cover-heading h1 {
+  font: 900 clamp(46px, 14vw, 72px)/1 system-ui, sans-serif;
+  letter-spacing: -.085em;
+}
+
+.area-sticker, .irion-cover .dish-score {
+  font: bold 12px/1.25 ui-monospace, monospace;
+  color: var(--ink);
+  background: #bce6f4;
+  padding: 6px 9px;
+  border-radius: 3px;
+  transform: rotate(-5deg);
+}
+
+.irion-cover .photo { margin-top: 12px; }
+.irion-cover .photo img { aspect-ratio: 1.8; object-fit: cover; border-radius: 16px; }
+.cover-address { font: bold 12px/1.4 ui-monospace, monospace; margin: 14px 0 5px; }
+.cover-description { font-size: 14px; }
+.irion-cover .stat { border: 0; border-radius: 16px; }
+.irion-cover .section { margin-top: 12px; }
+.irion-cover .items { border: 0; background: transparent; }
+.irion-cover .item { padding: 14px 2px; }
+.irion-cover .dish-score { background: #d4ed9e; white-space: nowrap; }
+.irion-cover .dish-top { align-items: baseline; gap: 10px; }
+.irion-cover .primary { border-radius: 100px; }
+.irion-cover .next { padding-top: 9px; padding-bottom: max(9px, env(safe-area-inset-bottom)); }

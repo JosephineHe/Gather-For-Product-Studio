@@ -1,5 +1,5 @@
 import { Link, useParams, useSearchParams } from 'react-router';
-import { Footer, Masthead, PlateIcon, PlateIllustration, Stat } from './components';
+import { Footer, Masthead, PlateIcon, Stat } from './components';
 
 const factors = ['Dishes', 'Price', 'Location'] as const;
 type Factor = typeof factors[number];
@@ -224,7 +224,7 @@ function slug(name: string) {
 
 const photos: Record<string, { room?: string; food?: string; caption: string; source: string }> = {
   irion: {
-    food: 'https://res.cloudinary.com/the-infatuation/image/upload/c_fill,w_900,ar_4:3,g_center,f_webp/images/PR_IMG_4090_gskjq4',
+    food: '/images/irion/dinner.webp',
     caption: 'Dinner at IRION', source: 'https://www.theinfatuation.com/new-york/reviews/irion',
   },
   'rice-thief': {
@@ -282,13 +282,18 @@ function IrionMatchVisual({ candidate, selected }: { candidate: Candidate; selec
 }
 
 export function IrionProfile() {
-  return <div className="frame">
+  return <div className="frame irion-cover">
     <Masthead step="Restaurant" />
     <main id="content" tabIndex={-1}>
-      <section className="hero"><div><span className="eyebrow">Original restaurant</span><h1>IRION</h1><p>Long Island City · 21-59 44th Drive</p></div><PlateIllustration /></section>
-      <p className="profile-description">Contemporary Korean sit-down dining with marinated seafood, comforting soups and plates to share.</p>
-      <ProfilePhoto id="irion" kind="room" />
-      {!photos.irion.room && <ProfilePhoto id="irion" kind="food" />}
+      <section className="cover-story" aria-labelledby="restaurant-name">
+        <div className="cover-heading">
+          <h1 id="restaurant-name">IRION</h1>
+          <span className="area-sticker">Long Island City</span>
+        </div>
+        <ProfilePhoto id="irion" kind="food" />
+        <p className="cover-address">21-59 44th Drive · Long Island City</p>
+        <p className="cover-description">Contemporary Korean sit-down dining with marinated seafood, comforting soups and plates to share.</p>
+      </section>
       <div className="stats">
         <Stat label="Estimated per person" value={money(baseline)} detail="Published ordering prices · dinner 5–10 p.m." />
         <Stat label="Reservations" value={<a href="https://resy.com/cities/new-york-ny/venues/irion">Check Resy</a>} detail="See the venue for availability" />
