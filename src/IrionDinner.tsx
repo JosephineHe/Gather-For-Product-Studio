@@ -215,7 +215,9 @@ export function IrionDinner() {
               <Link className="card-top" to={target}>
 
                 <div><span className="label">{match.area}</span><h2>{match.name}</h2></div>
-                <MatchStamp score={total} />
+                <span className="list-match-ring" style={{ backgroundImage: `conic-gradient(#771646 ${total}%, #dfcbbd 0)` }}>
+                  <span><strong>{total}%</strong><small>match</small></span>
+                </span>
               </Link>
               <ProfilePhoto id={slug(match.name)} kind={photos[slug(match.name)]?.room ? 'room' : 'food'} />
               <div className="card-info">
