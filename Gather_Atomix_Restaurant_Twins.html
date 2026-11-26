@@ -215,9 +215,10 @@ function atomixView() {
       <div class="dinner-facts">
         <span>${icon('bill')}<strong>~$396</strong><small>Est. per person</small></span>
         <span>${icon('clock')}<strong>5:30 / 8:45 pm</strong><small>Counter seatings</small></span>
-        <a href="https://www.atomixnyc.com/counter">${icon('calendar')}<strong>Book ↗</strong><small>Reservations</small></a>
+        <span>${icon('calendar')}<strong>Booked out</strong><small>Reservations</small></span>
       </div>
-    </section>` + '<section class="section"><h2>Chef’s Counter menu</h2><p class="lead">November menu highlights · Chef’s Counter from $424/person</p><div class="tasting-menu"><article class="item"><h3>Honeysuckle sikhye</h3><p>A sweet Korean rice drink with honeysuckle.</p></article><article class="item"><h3>Lamb saddle with neungi mushrooms</h3></article><article class="item"><h3>Dubu mu</h3><p>Tofu and radish</p></article><article class="item"><h3>Gosari rice</h3><p>Rice with bracken fern</p></article></div><h3 class="archive-title">From a previous menu</h3>'+photo(photos.atomix.archive,'dish-photo')+'</section><p class="footnote">No openings for two observed in the Nov. 10–Dec. 9 research window. Checked Nov. 10, 2026.</p></main>'+footer('twins','Explore Restaurant Twins','');
+      <p class="footnote">For two · Nov. 10–Dec. 9, 2026 · Checked Nov. 10. <a href="https://www.atomixnyc.com/counter">Check availability ↗</a></p>
+    </section>` + '<section class="section"><h2>Chef’s Counter menu</h2><p class="lead">November menu highlights · Chef’s Counter from $424/person</p><div class="tasting-menu"><article class="item"><h3>Honeysuckle sikhye</h3><p>A sweet Korean rice drink with honeysuckle.</p></article><article class="item"><h3>Lamb saddle with neungi mushrooms</h3></article><article class="item"><h3>Dubu mu</h3><p>Tofu and radish</p></article><article class="item"><h3>Gosari rice</h3><p>Rice with bracken fern</p></article></div><h3 class="archive-title">From a previous menu</h3>'+photo(photos.atomix.archive,'dish-photo')+'</section></main>'+footer('twins','Explore Restaurant Twins','');
 }
 function ring(score) {
   return '<span class="ring" style="--score:'+score+'%"><span><strong>'+score+'%</strong><small>match</small></span></span>';
