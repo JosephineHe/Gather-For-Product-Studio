@@ -122,3 +122,18 @@ export function SelectButton({ id }: { id: TwinId }) {
     </button>
   );
 }
+
+export function MatchRing({ score }: { score: number }) {
+  return <span className="match-ring" style={{ backgroundImage: `conic-gradient(#771646 ${score}%, #dfcbbd 0)` }}>
+    <span><strong>{score}%</strong><small>match</small></span>
+  </span>;
+}
+
+export function ScoreColumn({ score, label }: { score: number; label: string }) {
+  return <>
+    <span className="score-well"><span className="score-fill" style={{ height: score + '%' }}>
+      <strong className="score-number">{score}<small>%</small></strong>
+    </span></span>
+    <span className="score-caption">{label}</span>
+  </>;
+}

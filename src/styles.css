@@ -951,3 +951,11 @@ body:has(.irion-cover, .irion-guide, .irion-detail) { background: #eeeae4; }
 .match-ring > span { display: grid; align-content: center; justify-items: center; border-radius: inherit; background: var(--card); color: #462138; }
 .match-ring strong { font: bold 23px/1 Georgia, serif; }
 .match-ring small { font: bold 11px/1.4 ui-monospace, monospace; }
+.restaurant-switch { display:flex; flex-wrap:wrap; align-items:center; gap:5px; margin:0 0 14px; }
+.restaurant-switch > * { color:var(--ink); font:700 13px/1.2 var(--body); padding:10px 13px; text-decoration:none; border:1px solid currentColor; border-radius:100px; }
+.restaurant-switch [aria-current] { background:#282124; color:white; }
+.rule-guide .cover-heading h1 { font-size:clamp(42px,12vw,60px); }
+.rule-guide .rule-sticker { border-radius:50%; object-fit:cover; height:auto; aspect-ratio:1.35; border:3px solid #fff4dc; }
+.rule-guide .dish-ticket .photo img { width:100%; }
+.rule-guide .score-caption { overflow-wrap:anywhere; }
+.rule-guide .meal-nav { background:#ffedcd; }

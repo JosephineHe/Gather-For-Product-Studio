@@ -1,9 +1,9 @@
 import { ArrowRight } from 'lucide-react';
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink, Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { IrionDinner, IrionProfile, IrionTwinProfile } from './IrionDinner';
 import {
-  BookingStat, ChoiceSummary, Footer, Masthead, PlateIcon, PlateIllustration,
+  BookingStat, ChoiceSummary, Footer, Masthead, MatchRing, ScoreColumn,
   RestaurantPhoto, SelectButton, Stat,
 } from './components';
 import {
@@ -24,7 +24,7 @@ function Page({ title, step, back, children, footer }: {
   useEffect(() => { document.title = `${title} · Gather`; }, [title]);
 
   return (
-    <div className="frame">
+    <div className={`frame rule-guide ${step === 'Compare' ? 'irion-guide' : step === 'Restaurant' ? 'irion-cover' : 'irion-detail'}`}>
       <Masthead step={step} back={back} />
       <main id="content" tabIndex={-1}>{children}</main>
       {footer}
@@ -40,7 +40,7 @@ function MealNavigation({ meal, page }: { meal: MealId; page: 'profile' | 'twins
           key={id}
           className="meal-link"
           aria-current={meal === id ? 'page' : undefined}
-          to={page === 'twins' ? `/twins/${id}` : id === 'brunch' ? '/' : '/dinner'}
+          to={page === 'twins' ? `/twins/${id}` : id === 'brunch' ? '/rule-of-thirds' : '/dinner'}
           end
         >
           {meals[id].label}
@@ -61,16 +61,12 @@ function ProfilePage({ meal }: { meal: MealId }) {
         </Link>
       </Footer>
     }>
-      <section className="hero">
-        <div>
-          <span className="eyebrow">Original restaurant</span>
-          <h1>{restaurant.name}</h1>
-          <p>{restaurant.area} · {restaurant.address}</p>
-        </div>
-        <PlateIllustration />
+      <nav className="restaurant-switch" aria-label="Restaurant guides"><Link to="/">IRION</Link><span aria-current="page">Rule of Thirds</span><a href="/Gather_Atomix_Restaurant_Twins.html">Atomix</a></nav>
+      <section className="cover-story">
+        <div className="cover-heading"><h1>Rule of Thirds</h1></div>
+        <div className="cover-photo"><RestaurantPhoto photo={restaurant.photo} kind="hero-photo" /><span className="area-sticker">Greenpoint</span></div>
+        <p className="cover-address">{restaurant.address}</p><p>{restaurant.description}</p>
       </section>
-      <p className="profile-description">{restaurant.description}</p>
-      <RestaurantPhoto photo={restaurant.photo} kind="hero-photo" />
       <MealNavigation meal={meal} page="profile" />
       <div className="stats">
         <Stat label="Estimated per person" value={formatPrice(menu.price)} detail={menu.hours} />
@@ -78,23 +74,33 @@ function ProfilePage({ meal }: { meal: MealId }) {
       </div>
       <section className="section">
         <h2>{menu.label} highlights</h2>
-        <div className="items">
-          {menu.dishes.map((dish, index) => (
-            <article className="item" key={dish.name}>
-              <div className="dish-top">
-                <h3>{dish.name}</h3>
-                {dish.price !== undefined && <span className="dish-score">{formatPrice(dish.price)}</span>}
-              </div>
-              {meal === 'brunch' && index === 0 && <span className="label">Signature brunch dish</span>}
-              <p>{dish.description}</p>
-              {dish.photo && <RestaurantPhoto photo={dish.photo} kind="dish-photo" />}
-            </article>
-          ))}
-        </div>
+        <DishHighlights key={meal} meal={meal} />
         <p className="footnote"><a href={restaurant.menu} target="_blank" rel="noopener noreferrer">View the Rule of Thirds menu</a></p>
       </section>
     </Page>
   );
+}
+
+const shortLabels = {
+  brunch: ['Hottokeki', 'Karaage', 'Katsu sando', 'Gyudon', 'Breakfast set'],
+  dinner: ['Karaage', 'Silken tofu', 'Onigiri', 'Meatball', 'Tonkatsu'],
+};
+
+function DishHighlights({ meal }: { meal: MealId }) {
+  const [active, setActive] = useState<number | null>(null);
+  const dishes: Meal['dishes'] = meals[meal].dishes;
+  const chosen = active === null ? null : dishes[active];
+  return <>
+    <div className="dish-cloud" role="group" aria-label="Menu highlights">{dishes.map((dish, index) =>
+      <button key={dish.name} className="dish-bubble" aria-expanded={index === active} aria-controls="rule-dish"
+        onClick={() => setActive(index === active ? null : index)}>
+        {dish.photo && <img className="bubble-sticker rule-sticker" src={dish.photo.url} alt="" />}
+        <strong>{shortLabels[meal][index]}</strong>{dish.price !== undefined && <span className="bubble-price">{formatPrice(dish.price)}</span>}
+      </button>)}</div>
+    <div id="rule-dish" aria-live="polite">{chosen && <article className="dish-ticket" key={chosen.name}><div>
+      <h3>{chosen.name}</h3><p>{chosen.description}</p>{chosen.photo && <RestaurantPhoto photo={chosen.photo} kind="dish-photo" />}
+    </div></article>}</div>
+  </>;
 }
 
 function TwinCard({ id, rank }: { id: TwinId; rank: number }) {
@@ -104,13 +110,14 @@ function TwinCard({ id, rank }: { id: TwinId; rank: number }) {
   return (
     <article className="card" data-tone={twin.tone}>
       <Link className="card-top" to={`/twins/${twin.meal}/${id}`}>
-        <span className="card-icon"><PlateIcon /></span>
+
         <div>
           <span className="label">Twin {rank}</span>
           <h2>{twin.name}</h2>
         </div>
-        <div className="match"><strong>{total}%</strong><span>{meals[twin.meal].label.toLowerCase()} match</span></div>
+        <MatchRing score={total} />
       </Link>
+      <RestaurantPhoto photo={twin.photo} kind="hero-photo" />
       <div className="card-info">
         <span><small>Estimated per person</small><strong>{formatPrice(twin.price)}</strong></span>
         <span>
@@ -139,7 +146,7 @@ function OverviewPage({ meal }: { meal: MealId }) {
     .sort((a, b) => matchPoints(twins[b]).total - matchPoints(twins[a]).total);
 
   return (
-    <Page title={`${menu.label} Twins`} step="Compare" back={meal === 'brunch' ? '/' : '/dinner'}>
+    <Page title={`${menu.label} Twins`} step="Compare" back={meal === 'brunch' ? '/rule-of-thirds' : '/dinner'}>
       <div className="intro">
         <span className="eyebrow">Alternatives to {restaurant.name}</span>
         <h1>{menu.label} Twins</h1>
@@ -164,31 +171,13 @@ function MatchVisual({ twin }: { twin: Twin }) {
   ];
 
   return (
-    <figure className="match-visual">
-      <figcaption className="match-equation">
-        <span>{points.dishes} + {points.price} + {points.atmosphere}</span>
-        <strong>= {points.total}% match</strong>
-      </figcaption>
-      <div className="match-stack" aria-hidden="true">
-        {factors.map((factor) => (
-          <span className={`match-segment factor-${factor.color}`} style={{ width: `${factor.value}%` }} key={factor.name} />
-        ))}
-      </div>
-      <p className="match-scale">Points earned out of 100</p>
-      <div className="match-factors">
-        {factors.map((factor) => (
-          <div className="match-factor" key={factor.name}>
-            <div className="factor-label">
-              <span><span className={`factor-dot factor-${factor.color}`} aria-hidden="true" />{factor.name}</span>
-              <strong>{factor.value} <span>of {factor.maximum} points</span></strong>
-            </div>
-            <div className="factor-track" aria-hidden="true">
-              <span className={`factor-fill factor-${factor.color}`} style={{ width: `${factor.value / factor.maximum * 100}%` }} />
-            </div>
-          </div>
-        ))}
-      </div>
-      <p className="footnote">Dishes carry 60% of the score, price 25%, and atmosphere 15%.</p>
+    <figure className="score-panel">
+      <figcaption>Match breakdown · {points.total}/100</figcaption>
+      <div className="score-columns">{factors.map(factor =>
+        <div className="score-column" key={factor.name} data-factor={factor.name === 'Atmosphere' ? 'Location' : factor.name}>
+          <ScoreColumn score={Math.round(factor.value / factor.maximum * 100)} label={factor.name} />
+          <small>{factor.value}/{factor.maximum} pts</small>
+        </div>)}</div>
     </figure>
   );
 }
@@ -201,7 +190,7 @@ function MatchBreakdown({ twin }: { twin: Twin }) {
     <section className="section">
       <h2>How the match adds up</h2>
       <MatchVisual twin={twin} />
-      <div className="items">
+      <details className="score-guide"><summary>Scoring notes and sample orders</summary><div className="items">
         <article className="item">
           <div className="dish-top"><h3>Dishes</h3><span className="dish-score">{points.dishes}/60</span></div>
           <p>Five dish comparisons.{twin.meal === 'brunch' ? ' The signature pancake is worth twice as much as each savory dish.' : ' Each dish carries the same weight.'}</p>
@@ -234,7 +223,7 @@ function MatchBreakdown({ twin }: { twin: Twin }) {
           <p>{twin.atmosphereReason}</p>
         </article>
       </div>
-      <p className="footnote">Gather estimates the match from dishes, price and atmosphere.</p>
+      </details><p className="footnote">Gather estimates the match from dishes, price and atmosphere.</p>
       <details className="score-guide">
         <summary>What do the dish percentages mean?</summary>
         <p>100% means the same core dish, 75% a close preparation, 50% shared main ingredients with a different preparation, and 0% no comparable dish found on the reviewed menu.</p>
@@ -246,6 +235,8 @@ function MatchBreakdown({ twin }: { twin: Twin }) {
 function TwinPage({ id }: { id: TwinId }) {
   const twin: Twin = twins[id];
   const menu = meals[twin.meal];
+  const [activeDish, setActiveDish] = useState(0);
+  const dish = twin.dishes[activeDish];
 
   return (
     <Page title={twin.name} step="Twin details" back={`/twins/${twin.meal}`} footer={
@@ -257,7 +248,7 @@ function TwinPage({ id }: { id: TwinId }) {
           <h1>{twin.name}</h1>
           <p>{twin.area} · {twin.address}</p>
         </div>
-        <div className="match"><strong>{matchPoints(twin).total}%</strong><span>match to Rule of Thirds</span></div>
+        <MatchRing score={matchPoints(twin).total} />
       </section>
       {twin.affiliation && <p className="profile-description"><a className="label" href={twin.affiliation} target="_blank" rel="noopener noreferrer">Same restaurant group · Sunday Hospitality</a></p>}
       <RestaurantPhoto photo={twin.photo} kind="hero-photo" />
@@ -268,20 +259,13 @@ function TwinPage({ id }: { id: TwinId }) {
       <MatchBreakdown twin={twin} />
       <section className="section">
         <h2>How the dishes compare</h2>
-        <div className="items">
-          {twin.dishes.map((dish, index) => {
-            const reference = menu.dishes[index];
-            return (
-              <article className="item" key={reference.name}>
-                <div className="dish-top">
-                  <h3>{dish.name || 'No comparable dish found'}</h3>
-                  <span className="dish-score">{dish.score}% dish match</span>
-                </div>
-                <p className="compare">Rule of Thirds · {reference.name}</p>
-                <p>{dish.reason}</p>
-              </article>
-            );
-          })}
+        <div className="score-panel dish-scores">
+          <div className="score-columns">{twin.dishes.map((match, i) =>
+            <button key={i} className="score-column" aria-pressed={activeDish === i} onClick={() => setActiveDish(i)}>
+              <ScoreColumn score={match.score} label={shortLabels[twin.meal][i]} />
+            </button>)}</div>
+          <div className="dish-match-note" aria-live="polite"><small>Rule of Thirds · {menu.dishes[activeDish].name}</small>
+            <h3>{dish.name || 'No comparable dish found'}</h3><p>{dish.reason}</p></div>
         </div>
       </section>
       <p className="footnote">

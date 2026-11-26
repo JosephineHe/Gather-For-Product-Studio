@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
-import { Footer, Masthead } from './components';
+import { Footer, Masthead, MatchRing, ScoreColumn } from './components';
 
 import { ArrowUpRight, Banknote, CalendarDays, Sparkles, Clock3, Layers2, MapPin, Shrimp, Utensils } from 'lucide-react';
 
@@ -282,21 +282,6 @@ function ProfilePhoto({ id, kind }: { id: string; kind: 'room' | 'food' }) {
   </figure>;
 }
 
-function MatchRing({ score }: { score: number }) {
-  return <span className="match-ring" style={{ backgroundImage: `conic-gradient(#771646 ${score}%, #dfcbbd 0)` }}>
-    <span><strong>{score}%</strong><small>match</small></span>
-  </span>;
-}
-
-function ScoreColumn({ score, label }: { score: number; label: string }) {
-  return <>
-    <span className="score-well"><span className="score-fill" style={{ height: score + '%' }}>
-      <strong className="score-number">{score}<small>%</small></strong>
-    </span></span>
-    <span className="score-caption">{label}</span>
-  </>;
-}
-
 function IrionMatchVisual({ candidate, selected }: { candidate: Candidate; selected: readonly Factor[] }) {
   return <figure className="score-panel">
     <figcaption>Match factors</figcaption>
@@ -336,6 +321,7 @@ export function IrionProfile() {
   return <div className="frame irion-cover">
     <Masthead step="Restaurant" />
     <main id="content" tabIndex={-1}>
+      <nav className="restaurant-switch" aria-label="Restaurant guides"><span aria-current="page">IRION</span><Link to="/rule-of-thirds">Rule of Thirds</Link><a href="/Gather_Atomix_Restaurant_Twins.html">Atomix</a></nav>
       <section className="cover-story" aria-labelledby="restaurant-name">
         <div className="cover-heading"><h1 id="restaurant-name">IRION</h1><span className="cuisine">Contemporary<br />Korean</span></div>
         <div className="cover-photo">
