@@ -215,7 +215,7 @@ export function IrionDinner() {
               <Link className="card-top" to={target}>
 
                 <div><span className="label">{match.area}</span><h2>{match.name}</h2></div>
-                <div className="match score-ring" style={{ backgroundImage: `conic-gradient(#455e34 ${total}%, #e1dfd3 0)` }}><div><strong>{total}%</strong><span>match</span></div></div>
+                <MatchStamp score={total} />
               </Link>
               <ProfilePhoto id={slug(match.name)} kind={photos[slug(match.name)]?.room ? 'room' : 'food'} />
               <div className="card-info">
@@ -282,17 +282,51 @@ function ProfilePhoto({ id, kind }: { id: string; kind: 'room' | 'food' }) {
   </figure>;
 }
 
+function MatchStamp({ score }: { score: number }) {
+  return <span className="match-stamp"><strong>{score}<small>%</small></strong><span>match</span></span>;
+}
+
+function ScoreColumn({ score, label }: { score: number; label: string }) {
+  return <>
+    <span className="score-well"><span className="score-fill" style={{ height: score + '%' }}>
+      <strong className="score-number">{score}<small>%</small></strong>
+    </span></span>
+    <span className="score-caption">{label}</span>
+  </>;
+}
+
 function IrionMatchVisual({ candidate, selected }: { candidate: Candidate; selected: readonly Factor[] }) {
-  const parts = scoreFactors(candidate, selected);
-  return <figure className="match-visual">
-    <figcaption className="match-equation"><span>Selected factors</span><strong>{matchPercent(candidate, selected)}% match</strong></figcaption>
-    <div className="match-stack" aria-hidden="true">
-      {parts.map(({ name, score }) => <span key={name} className={`match-segment factor-${name === 'Location' ? 'atmosphere' : name.toLowerCase()}`} style={{ width: `${score / parts.length}%` }} />)}
-    </div>
-    <div className="match-factors">{parts.map(({ name, score }) =>
-      <div className="factor-label" key={name}><span>{name}</span><strong>{score}%</strong></div>)}</div>
-    <p className="footnote">The overall score averages the selected factors. Crab counts twice in the dish score. Price starts at 100% and loses five points per dollar of difference. Location earns 100% when the restaurant meets the walking criterion.</p>
+  return <figure className="score-panel">
+    <figcaption>Match factors</figcaption>
+    <div className="score-columns">{scoreFactors(candidate, selected).map(({ name, score }) =>
+      <div className="score-column" data-factor={name} key={name}><ScoreColumn label={name} score={score} /></div>
+    )}</div>
+    <details className="score-method"><summary>How it’s calculated</summary>
+      <p>The overall score averages the selected factors. Crab counts twice in the dish score. Price starts at 100% and loses five points per dollar of difference. Location earns 100% when the restaurant meets the walking criterion.</p>
+    </details>
   </figure>;
+}
+
+const dishLabels = ['Crab', 'Shrimp', 'Pork stew', 'Beef soup', 'Dumplings'];
+
+function DishComparison({ candidate }: { candidate: Candidate }) {
+  const [active, setActive] = useState(0);
+  const rows = comparisons(candidate);
+  const [name, , reason] = rows[active];
+  return <div className="score-panel dish-scores">
+    <div className="score-columns" role="group" aria-label="Compare dishes with IRION">
+      {rows.map(([, score], index) =>
+        <button type="button" className="score-column" key={dishLabels[index]}
+          aria-pressed={active === index} aria-controls="dish-match-note"
+          aria-label={highlights[index][0] + ', ' + score + '% match'}
+          onClick={() => setActive(index)}>
+          <ScoreColumn score={score} label={dishLabels[index]} />
+        </button>)}
+    </div>
+    <div className="dish-match-note" id="dish-match-note" aria-live="polite">
+      <small>IRION · {highlights[active][0]}</small><h3>{name || 'No comparable dish found'}</h3><p>{reason}</p>
+    </div>
+  </div>;
 }
 
 export function IrionProfile() {
@@ -356,7 +390,7 @@ export function IrionTwinProfile() {
     <main id="content" tabIndex={-1}>
       <section className="hero twin-hero" data-tone="sage">
         <div><span className="eyebrow">Dinner Twin</span><h1>{match.name}</h1><p>{match.area}</p></div>
-        <div className="match"><strong>{matchPercent(match, selected)}%</strong><span>match to IRION</span></div>
+        <MatchStamp score={matchPercent(match, selected)} />
       </section>
       <ProfilePhoto id={slug(match.name)} kind="room" />
       <section className="section">
@@ -371,11 +405,7 @@ export function IrionTwinProfile() {
       </section>
             {dishes && <section className="section">
         <h2>How the dishes compare</h2>
-        <div className="items">{comparisons(match).map(([name, score, reason], index) =>
-          <article className="item" key={highlights[index][0]}>
-            <div className="dish-top"><h3>{name || 'No comparable dish found'}</h3><span className="dish-score">{score}% dish match</span></div>
-            <p className="compare">IRION · {highlights[index][0]}</p><p>{reason}</p>
-          </article>)}</div>
+        <DishComparison candidate={match} key={match.name} />
         <details className="score-guide"><summary>What do the dish percentages mean?</summary><p>100% is the same core dish, 75% is a close preparation, 50% is a partial match, and 0% means no comparable dish was identified.</p></details>
       </section>}
       <section className="section">
