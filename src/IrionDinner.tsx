@@ -143,8 +143,14 @@ function dishScore(candidate: Candidate) {
 }
 
 function scoreFactors(candidate: Candidate, selected: readonly Factor[]) {
-  const scores = { Dishes: dishScore(candidate), Price: 50, Location: 80 };
-  return selected.map((name) => ({ name, score: scores[name] }));
+  return selected.map((name) => {
+    if (name === 'Dishes') return { name, score: dishScore(candidate) };
+    if (name === 'Price' && candidate.prices) {
+      const gap = Math.abs(dinnerPrice(candidate.prices) - baseline);
+      return { name, score: Math.max(0, Math.round(100 - gap * 5)) };
+    }
+    return { name, score: name === 'Location' && candidate.nearby ? 100 : 0 };
+  });
 }
 
 function matchPercent(candidate: Candidate, selected: readonly Factor[]) {
@@ -209,9 +215,7 @@ export function IrionDinner() {
               <Link className="card-top" to={target}>
 
                 <div><span className="label">{match.area}</span><h2>{match.name}</h2></div>
-                <span className="twin-progress" style={{ backgroundImage: `conic-gradient(#771646 ${total}%, #e1cabb 0)` }}>
-                  <span><strong>{total}%</strong><small>match</small></span>
-                </span>
+                <MatchStamp score={total} />
               </Link>
               <ProfilePhoto id={slug(match.name)} kind={photos[slug(match.name)]?.room ? 'room' : 'food'} />
               <div className="card-info">
@@ -298,7 +302,7 @@ function IrionMatchVisual({ candidate, selected }: { candidate: Candidate; selec
       <div className="score-column" data-factor={name} key={name}><ScoreColumn label={name} score={score} /></div>
     )}</div>
     <details className="score-method"><summary>How it’s calculated</summary>
-      <p>The overall score averages the selected factors. Crab counts twice in the dish score. Price (50%) and location (80%) are fixed prototype scores.</p>
+      <p>The overall score averages the selected factors. Crab counts twice in the dish score. Price starts at 100% and loses five points per dollar of difference. Location earns 100% when the restaurant meets the walking criterion.</p>
     </details>
   </figure>;
 }
@@ -390,8 +394,8 @@ export function IrionTwinProfile() {
       </section>
       <ProfilePhoto id={slug(match.name)} kind="room" />
       <section className="section">
-        <h2>Match breakdown</h2><p className="factor-context">Overall match based on {selected.join(' + ').toLowerCase()}.</p>
-        <IrionMatchVisual candidate={match} selected={factors} />
+        <h2>How the match adds up</h2>
+        <IrionMatchVisual candidate={match} selected={selected} />
               {dishes && <p><strong>Dishes.</strong> {match.dishes}</p>}
               {(dishes || price) && <p><strong>Atmosphere.</strong> {match.atmosphere}</p>}
               {price && match.prices && <p><strong>Price.</strong> About {money(dinnerPrice(match.prices))} per person versus {money(baseline)} at IRION.

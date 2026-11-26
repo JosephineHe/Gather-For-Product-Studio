@@ -952,9 +952,3 @@ body:has(.irion-cover, .irion-guide, .irion-detail) { background: #eeeae4; }
 .dish-match-note small { color:#e8c5d8; }
 .dish-match-note h3 { margin:4px 0; font-size:20px; }
 .dish-match-note p { font-size:14px; }
-
-.twin-progress { flex: none; display: grid; margin-left: auto; padding: 6px; width: 70px; height: 70px; border-radius: 50%; }
-.twin-progress > span { display: grid; align-content: center; justify-items: center; background: var(--card); border-radius: inherit; color: #462138; }
-.twin-progress strong { font: bold 23px/1 Georgia,serif; }
-.twin-progress small { font: bold 11px/1.4 ui-monospace,monospace; }
-.factor-context { font-size: 14px; margin-top: 6px; }
