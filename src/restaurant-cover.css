@@ -1,0 +1,29 @@
+.cover-story { padding: clamp(14px,4vw,22px); border-radius: 4px 34px 4px 4px; background: #ffedcd; }
+.cover-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.cover-heading h1 { font: 950 clamp(54px,16vw,78px)/1 system-ui,sans-serif; letter-spacing: -.085em; }
+.cuisine { font: italic 18px/1.05 Georgia,serif; text-align: right; }
+.cover-photo { position: relative; margin: 16px 0 0; }
+.cover-photo figure { margin: 0; }
+.cover-photo img { border-radius: 18px; aspect-ratio: 1.65; object-fit: cover; }
+.cover-photo figcaption { text-align: right; margin-top: 8px; }
+.area-sticker { position: absolute; left: 9px; top: 10px; display: flex; align-items: center; gap: 5px; padding: 6px 10px; background: #aadaf1; border: 2px solid white; border-radius: 4px; transform: rotate(-6deg); font: bold 12px/1.2 ui-monospace,monospace; }
+.area-sticker svg,.cover-address svg { width: 15px; height: 15px; }
+.seafood-seal { position: absolute; left: 9px; bottom: 3px; width: 58px; height: 58px; display: grid; place-items: center; border-radius: 50%; border: 4px solid #fffaf2; outline: 1px solid #342818; background: #ffc755; transform: rotate(-16deg); }
+.seafood-seal svg { width: 38px; height: 38px; stroke: #452420; stroke-width: 1.6; }
+.cover-address { display: flex; align-items: center; gap: 6px; font-size: 14px; }
+.cover-address { margin: 15px 0; }
+.dinner-facts { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); background: #c8e1f1; border-radius: 3px; padding: 12px 0; }
+.dinner-facts > * { display: grid; justify-items: center; gap: 3px; color: inherit; text-align: center; }
+.dinner-facts > * + * { border-left: 1px solid #cfc5b3; }
+.dinner-facts svg { width: 21px; height: 21px; }
+.dinner-facts small { font-size: 12px; }
+
+.cover-story .cover-image { position:relative; }
+.cover-story .cover-image > img { display:block; width:100%; height:auto; aspect-ratio:1.65; object-fit:cover; }
+.cover-story .cover-image .seafood-seal { bottom:-12px; }
+.cover-story .cover-credit { padding-left:66px; font-size:12px; text-align:right; }
+.cover-story .cover-credit a { color:inherit; }
+.cover-story .dinner-facts strong { line-height:1.15; }
+.cover-story .dinner-facts > * { min-width:0; align-content:start; }
+.cover-heading .cuisine { flex:none; }
+@media (max-width:350px) { .cover-heading .cuisine { font-size:15px; } }

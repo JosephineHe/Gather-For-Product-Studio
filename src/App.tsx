@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Banknote, CalendarDays, Clock3, MapPin, Soup } from 'lucide-react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink, Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { IrionDinner, IrionProfile, IrionTwinProfile } from './IrionDinner';
@@ -63,15 +63,24 @@ function ProfilePage({ meal }: { meal: MealId }) {
     }>
       <nav className="restaurant-switch" aria-label="Restaurant guides"><Link to="/">IRION</Link><span aria-current="page">Rule of Thirds</span><a href="/Gather_Atomix_Restaurant_Twins.html">Atomix</a></nav>
       <section className="cover-story">
-        <div className="cover-heading"><h1>Rule of Thirds</h1></div>
-        <div className="cover-photo"><RestaurantPhoto photo={restaurant.photo} kind="hero-photo" /><span className="area-sticker">Greenpoint</span></div>
-        <p className="cover-address">{restaurant.address}</p><p>{restaurant.description}</p>
+        <div className="cover-heading"><h1>Rule of Thirds</h1><span className="cuisine">Japanese<br />Izakaya</span></div>
+        <figure className="cover-photo">
+          <div className="cover-image">
+            <img src={restaurant.photo.url} alt={restaurant.photo.caption} />
+            <span className="area-sticker"><MapPin />Greenpoint</span>
+            <span className="seafood-seal" aria-hidden="true"><Soup /></span>
+          </div>
+          <figcaption className="cover-credit"><a href={restaurant.photo.source}>{restaurant.photo.credit}</a></figcaption>
+        </figure>
+        <p className="cover-address"><MapPin />{restaurant.address}</p>
+        <div className="dinner-facts">
+          <span><Banknote /><strong>{formatPrice(menu.price)}</strong><small>Est. per person</small></span>
+          <span title={menu.hours}><Clock3 /><strong>{meal === 'brunch' ? '10 am–3 pm' : 'From 5 pm'}</strong><small>{meal === 'brunch' ? 'Weekend brunch' : 'Daily dinner'}</small></span>
+          <a href={menu.booking.url}><CalendarDays /><strong>{menu.booking.platform} ↗</strong><small>Reservations</small></a>
+        </div>
       </section>
       <MealNavigation meal={meal} page="profile" />
-      <div className="stats">
-        <Stat label="Estimated per person" value={formatPrice(menu.price)} detail={menu.hours} />
-        <BookingStat booking={menu.booking} />
-      </div>
+      {menu.booking.opening && <p className="footnote">Table for two observed {menu.booking.opening} · 2026 study snapshot.</p>}
       <section className="section">
         <h2>{menu.label} highlights</h2>
         <DishHighlights key={meal} meal={meal} />

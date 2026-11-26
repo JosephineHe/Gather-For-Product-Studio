@@ -32,6 +32,7 @@ body{background:#eeeae4}.hero{background:#ffedcd;border-radius:4px 34px 4px 4px}
 .dish-chart button{display:flex;align-items:stretch;flex-direction:column;background:none;border:0;color:inherit;flex:1;min-width:0;padding:0 2px;font-size:12px}
 .track{display:flex;align-items:flex-end;height:72px;margin-top:22px;border-bottom:1px solid #baa3b0}.bar{position:relative;background:var(--fill);width:100%;border-radius:99px 99px 0 0}.bar strong{position:absolute;bottom:100%;left:0;right:0;color:var(--fill)}.dish-chart .caption{margin-top:5px;padding:4px;overflow-wrap:anywhere}.dish-chart [aria-pressed=true] .caption{background:var(--fill);color:#291c28;border-radius:5px}
 </style>
+<link rel="stylesheet" href="./src/restaurant-cover.css">
 </head>
 <body>
 <div class="frame" id="app"></div>
@@ -56,6 +57,10 @@ const twins = {
 const app = document.getElementById('app');
 const storageKey = 'gather-atomix-study-choice-v1';
 const icons = {
+  pin:'<path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>',
+  bill:'<rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M5 12h1m12 0h1"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 6v6h4"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18"/>',
   spark:'<path d="M12 2v20M2 12h20M5 5l14 14M19 5 5 19"/>',
   arrow:'<path d="M4 12h15m-6-6 6 6-6 6"/>',
   back:'<path d="M20 12H5m6-6-6 6 6 6"/>',
@@ -64,9 +69,6 @@ const icons = {
 };
 function icon(name) {
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+icons[name]+'</svg>';
-}
-function illustration() {
-  return '<svg class="art" viewBox="0 0 112 112" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="55" cy="57" r="38"/><circle cx="55" cy="57" r="29"/><path d="M40 68c10 0 20-5 25-16M54 60c-5-1-9-6-10-11 6 0 12 4 13 9M58 57c1-7 6-13 13-14-1 8-6 13-12 15M88 15l17 16m-13-22 17 17M18 81l-8 15m15-11-8 15M13 31v11m-5-5h10m78 42v10m-5-5h10"/></svg>';
 }
 function loadChoice() {
   try {
@@ -200,10 +202,22 @@ app.addEventListener('error', event => {
 }, true);
 
 function atomixView() {
-  return '<main id="content" tabindex="-1"><nav class="switch" aria-label="Restaurant guides"><a href="./#/">IRION</a><a href="./#/rule-of-thirds">Rule of Thirds</a><span aria-current="page">Atomix</span></nav><section class="hero"><div><span class="eyebrow">Original restaurant</span><h1>Atomix</h1><p>Modern Korean fine dining</p></div>'+illustration()+'</section>'+photo(photos.atomix.room,'hero-photo')+'<div class="stats">'+
-    stat('Average meal price','~$396/person','Average across listed experiences')+
-    stat('Dinner for two','No openings','Nov. 10–Dec. 9 research window')+
-    '</div><section class="section"><h2>Chef’s Counter menu</h2><p class="lead">November menu highlights · Chef’s Counter from $424/person</p><div class="tasting-menu"><article class="item"><h3>Honeysuckle sikhye</h3><p>A sweet Korean rice drink with honeysuckle.</p></article><article class="item"><h3>Lamb saddle with neungi mushrooms</h3></article><article class="item"><h3>Dubu mu</h3><p>Tofu and radish</p></article><article class="item"><h3>Gosari rice</h3><p>Rice with bracken fern</p></article></div><h3 class="archive-title">From a previous menu</h3>'+photo(photos.atomix.archive,'dish-photo')+'</section><p class="footnote">Dinner availability checked Nov. 10, 2026 · Party of two · ET.</p></main>'+footer('twins','Explore Restaurant Twins','');
+  return '<main id="content" tabindex="-1"><nav class="switch" aria-label="Restaurant guides"><a href="./#/">IRION</a><a href="./#/rule-of-thirds">Rule of Thirds</a><span aria-current="page">Atomix</span></nav>' + `
+    <section class="cover-story">
+      <div class="cover-heading"><h1>Atomix</h1><span class="cuisine">Modern<br />Korean</span></div>
+      <figure class="cover-photo">
+        <div class="cover-image"><img src="/images/atomix/lounge.webp" alt="Atomix downstairs dining space">
+          <span class="area-sticker">${icon('pin')}NoMad</span>
+          <span class="seafood-seal" aria-hidden="true">${icon('plate')}</span></div>
+        <figcaption class="cover-credit"><a href="${photos.atomix.room[3]}">${photos.atomix.room[2]}</a></figcaption>
+      </figure>
+      <p class="cover-address">${icon('pin')}104 E 30th St</p>
+      <div class="dinner-facts">
+        <span>${icon('bill')}<strong>~$396</strong><small>Est. per person</small></span>
+        <span>${icon('clock')}<strong>5:30 / 8:45 pm</strong><small>Counter seatings</small></span>
+        <a href="https://www.atomixnyc.com/counter">${icon('calendar')}<strong>Book ↗</strong><small>Reservations</small></a>
+      </div>
+    </section>` + '<section class="section"><h2>Chef’s Counter menu</h2><p class="lead">November menu highlights · Chef’s Counter from $424/person</p><div class="tasting-menu"><article class="item"><h3>Honeysuckle sikhye</h3><p>A sweet Korean rice drink with honeysuckle.</p></article><article class="item"><h3>Lamb saddle with neungi mushrooms</h3></article><article class="item"><h3>Dubu mu</h3><p>Tofu and radish</p></article><article class="item"><h3>Gosari rice</h3><p>Rice with bracken fern</p></article></div><h3 class="archive-title">From a previous menu</h3>'+photo(photos.atomix.archive,'dish-photo')+'</section><p class="footnote">No openings for two observed in the Nov. 10–Dec. 9 research window. Checked Nov. 10, 2026.</p></main>'+footer('twins','Explore Restaurant Twins','');
 }
 function ring(score) {
   return '<span class="ring" style="--score:'+score+'%"><span><strong>'+score+'%</strong><small>match</small></span></span>';
