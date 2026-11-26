@@ -921,12 +921,6 @@ body:has(.irion-cover, .irion-guide, .irion-detail) { background: #eeeae4; }
 .irion-guide .card[data-tone=sage] { --card: #d5ead0; border-radius: 5px 28px 5px 5px; }
 .irion-guide .card[data-tone=honey] { --card: #ffe29b; border-radius: 5px; border-style: dashed; }
 
-/* The overall score is typeset as a seal; quantitative columns share a 0–100 scale. */
-.match-stamp { position:relative; isolation:isolate; flex:none; margin-left:auto; width:76px; height:78px; display:grid; align-content:center; justify-items:center; padding-top:7px; border-radius:50% 50% 0 0; background:#771646; color:#fff1cc; line-height:1; }
-.match-stamp::after { content:""; position:absolute; bottom:0; right:-5px; width:25px; height:13px; border-radius:0 0 18px 18px; background:#ffb536; }
-.match-stamp strong { font:700 32px/.95 Georgia,serif; letter-spacing:-.07em; }
-.match-stamp small { font:600 15px/1 system-ui,sans-serif; letter-spacing:-.04em; }
-.match-stamp > span { margin-top:4px; font:700 10px/1.2 ui-monospace,monospace; text-transform:uppercase; letter-spacing:.08em; }
 .score-panel { margin:12px 0; padding:15px; background:#2e1928; color:#fff1dd; border-radius:3px 22px 3px 3px; }
 .score-panel figcaption { font:600 17px/1.2 Georgia,serif; }
 .score-columns { display:flex; align-items:stretch; margin-top:8px; }
@@ -953,7 +947,7 @@ body:has(.irion-cover, .irion-guide, .irion-detail) { background: #eeeae4; }
 .dish-match-note h3 { margin:4px 0; font-size:20px; }
 .dish-match-note p { font-size:14px; }
 
-.list-match-ring { display: grid; flex: none; margin-left: auto; padding: 6px; width: 70px; height: 70px; border-radius: 50%; }
-.list-match-ring > span { display: grid; align-content: center; justify-items: center; border-radius: inherit; background: var(--card); color: #462138; }
-.list-match-ring strong { font: bold 23px/1 Georgia, serif; }
-.list-match-ring small { font: bold 11px/1.4 ui-monospace, monospace; }
+.match-ring { display: grid; flex: none; margin-left: auto; padding: 6px; width: 70px; height: 70px; border-radius: 50%; }
+.match-ring > span { display: grid; align-content: center; justify-items: center; border-radius: inherit; background: var(--card); color: #462138; }
+.match-ring strong { font: bold 23px/1 Georgia, serif; }
+.match-ring small { font: bold 11px/1.4 ui-monospace, monospace; }

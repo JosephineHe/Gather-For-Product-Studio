@@ -215,9 +215,7 @@ export function IrionDinner() {
               <Link className="card-top" to={target}>
 
                 <div><span className="label">{match.area}</span><h2>{match.name}</h2></div>
-                <span className="list-match-ring" style={{ backgroundImage: `conic-gradient(#771646 ${total}%, #dfcbbd 0)` }}>
-                  <span><strong>{total}%</strong><small>match</small></span>
-                </span>
+                <MatchRing score={total} />
               </Link>
               <ProfilePhoto id={slug(match.name)} kind={photos[slug(match.name)]?.room ? 'room' : 'food'} />
               <div className="card-info">
@@ -284,8 +282,10 @@ function ProfilePhoto({ id, kind }: { id: string; kind: 'room' | 'food' }) {
   </figure>;
 }
 
-function MatchStamp({ score }: { score: number }) {
-  return <span className="match-stamp"><strong>{score}<small>%</small></strong><span>match</span></span>;
+function MatchRing({ score }: { score: number }) {
+  return <span className="match-ring" style={{ backgroundImage: `conic-gradient(#771646 ${score}%, #dfcbbd 0)` }}>
+    <span><strong>{score}%</strong><small>match</small></span>
+  </span>;
 }
 
 function ScoreColumn({ score, label }: { score: number; label: string }) {
@@ -392,7 +392,7 @@ export function IrionTwinProfile() {
     <main id="content" tabIndex={-1}>
       <section className="hero twin-hero" data-tone="sage">
         <div><span className="eyebrow">Dinner Twin</span><h1>{match.name}</h1><p>{match.area}</p></div>
-        <MatchStamp score={matchPercent(match, selected)} />
+        <MatchRing score={matchPercent(match, selected)} />
       </section>
       <ProfilePhoto id={slug(match.name)} kind="room" />
       <section className="section">
